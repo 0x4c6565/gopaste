@@ -5,30 +5,30 @@ A client for pasting text to p.lee.io from stdin/files
 ## Examples
 
 ```
-"lolololol" | gopaste
+[root@lee ~]# "lolololol" | gopaste
 https://p.lee.io/4f27db79-5aed-49f8-a9c9-c94a8cdca7fa
 ```
 
 ```
-gopaste -file /tmp/lol.txt
+[root@lee ~]# gopaste -file /tmp/lol.txt
 https://p.lee.io/c01cac79-84bd-4fb4-aa99-aa9e0094c150
 ```
 
 ```
-'{"hello":true}' | gopaste -syntax "application/ld+json"
+[root@lee ~]# '{"hello":true}' | gopaste -syntax "application/ld+json"
 https://p.lee.io/f51eeb24-d54a-46b4-85ab-eecef159e91b
 ```
 
 ```
-"lolololol" | gopaste -encrypt
+[root@lee ~]# "lolololol" | gopaste -encrypt
 https://p.lee.io/3ee20782-e75e-47c5-97fc-ed2fe50a846a#encryptionKey=kJGDMAYagndatCQ4Fi0UgFHa
 
-gopaste -get 3ee20782-e75e-47c5-97fc-ed2fe50a846a -decryptionkey kJGDMAYagndatCQ4Fi0UgFHa
+[root@lee ~]# gopaste -get 3ee20782-e75e-47c5-97fc-ed2fe50a846a -decryptionkey kJGDMAYagndatCQ4Fi0UgFHa
 lolololol
 ```
 
 ```
-gopaste -get 1658fa7d-3b41-4725-977a-9cf5934dc3b7
+[root@lee ~]# gopaste -get 1658fa7d-3b41-4725-977a-9cf5934dc3b7
 lololol
 ```
 
