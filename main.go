@@ -2,15 +2,19 @@ package main
 
 import (
 	"bytes"
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	openssl "github.com/Luzifer/go-openssl"
 )
 
 var url = "https://p.lee.io"
@@ -43,6 +47,7 @@ func main() {
 	var syntaxFlag = flag.String("syntax", "", "(Optional) Syntax to use for paste")
 	var expiresFlag = flag.String("expires", "", "(Optional) Expire type to use for paste")
 	var fileFlag = flag.String("file", "", "(Optional) File to read from. Stdin is used if not provided")
+	var encryptFlag = flag.Bool("encrypt", false, "Encrypts paste")
 	var getUUIDFlag = flag.String("get", "", "UUID of paste to retrieve")
 	var getSyntaxFlag = flag.Bool("getsyntax", false, "Retrieve supported syntax")
 	var getExpiresFlag = flag.Bool("getexpires", false, "Retrieve supported expire types")
@@ -78,14 +83,34 @@ func main() {
 	var data []byte
 	if *fileFlag == "" {
 		data, err = ioutil.ReadAll(os.Stdin)
-		failOnError(err, "Failed to read from stdin")
+		failOnError(err, "failed to read from stdin")
 	} else {
 		data, err = ioutil.ReadFile(*fileFlag)
-		failOnError(err, "Failed to read from file")
+		failOnError(err, "failed to read from file")
 	}
 
-	uuid, err := addPaste(string(data), *syntaxFlag, *expiresFlag)
-	failOnError(err, "Failed to add paste")
+	dataStr := string(data)
+	key := ""
+	if *encryptFlag {
+		key = generatePassword()
+		o := openssl.New()
+
+		encrypted, err := o.EncryptString(key, dataStr)
+		if err != nil {
+			fmt.Printf("An error occurred: %s\n", err)
+		}
+
+		failOnError(err, "failed to encrypt text")
+
+		dataStr = string(encrypted)
+	}
+
+	uuid, err := addPaste(dataStr, *syntaxFlag, *expiresFlag)
+	failOnError(err, "failed to add paste")
+
+	if *encryptFlag {
+		uuid = fmt.Sprintf("%s#encryptionKey=%s", uuid, key)
+	}
 
 	fmt.Printf("%s/%s\n", url, uuid)
 }
@@ -210,4 +235,30 @@ func doCall(method string, route string, payload interface{}) (interface{}, erro
 	}
 
 	return resp.Data, nil
+}
+
+// Taken from https://github.com/cmiceli/password-generator-go
+func generatePassword() string {
+	chars := []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+	length := 24
+	newPassword := make([]byte, length)
+	randomData := make([]byte, length+(length/4)) // storage for random bytes.
+	clen := byte(len(chars))
+	maxrb := byte(256 - (256 % len(chars)))
+	i := 0
+	for {
+		if _, err := io.ReadFull(rand.Reader, randomData); err != nil {
+			panic(err)
+		}
+		for _, c := range randomData {
+			if c >= maxrb {
+				continue
+			}
+			newPassword[i] = chars[c%clen]
+			i++
+			if i == length {
+				return string(newPassword)
+			}
+		}
+	}
 }

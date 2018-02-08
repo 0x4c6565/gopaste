@@ -20,6 +20,11 @@ https://p.lee.io/f51eeb24-d54a-46b4-85ab-eecef159e91b
 ```
 
 ```
+"lolololol" | gopaste -encrypt
+https://p.lee.io/3ee20782-e75e-47c5-97fc-ed2fe50a846a#encryptionKey=kJGDMAYagndatCQ4Fi0UgFHa
+```
+
+```
 gopaste -get 1658fa7d-3b41-4725-977a-9cf5934dc3b7
 lololol
 ```
@@ -29,6 +34,8 @@ lololol
 ```
 gopaste --help
 Usage of /usr/bin/local/gopaste:
+  -encrypt
+        Encrypts paste
   -expires string
         (Optional) Expire type to use for paste
   -file string
