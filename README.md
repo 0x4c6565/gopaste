@@ -25,7 +25,7 @@ https://p.lee.io/f51eeb24-d54a-46b4-85ab-eecef159e91b
 gopaste --help
 Usage of /usr/bin/local/gopaste:
   -expires string
-        (Optional) Expire type to use for paste (Optional)
+        (Optional) Expire type to use for paste
   -file string
         (Optional) File to read from. Stdin is used if not provided
   -get string

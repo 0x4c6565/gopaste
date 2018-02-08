@@ -41,7 +41,7 @@ type paste struct {
 func main() {
 
 	var syntaxFlag = flag.String("syntax", "", "(Optional) Syntax to use for paste")
-	var expiresFlag = flag.String("expires", "", "(Optional) Expire type to use for paste (Optional)")
+	var expiresFlag = flag.String("expires", "", "(Optional) Expire type to use for paste")
 	var fileFlag = flag.String("file", "", "(Optional) File to read from. Stdin is used if not provided")
 	var getUUIDFlag = flag.String("get", "", "UUID of paste to retrieve")
 	var getSyntaxFlag = flag.Bool("getsyntax", false, "Retrieve supported syntax")
