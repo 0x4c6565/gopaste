@@ -47,7 +47,8 @@ func main() {
 	var syntaxFlag = flag.String("syntax", "", "(Optional) Syntax to use for paste")
 	var expiresFlag = flag.String("expires", "", "(Optional) Expire type to use for paste")
 	var fileFlag = flag.String("file", "", "(Optional) File to read from. Stdin is used if not provided")
-	var encryptFlag = flag.Bool("encrypt", false, "Encrypts paste")
+	var encryptFlag = flag.Bool("encrypt", false, "Encrypts paste (client-side)")
+	var decryptKeyFlag = flag.String("decryptionkey", "", "Decryption key for retrieving encrypted pastes (client-side)")
 	var getUUIDFlag = flag.String("get", "", "UUID of paste to retrieve")
 	var getSyntaxFlag = flag.Bool("getsyntax", false, "Retrieve supported syntax")
 	var getExpiresFlag = flag.Bool("getexpires", false, "Retrieve supported expire types")
@@ -59,7 +60,17 @@ func main() {
 	if *getUUIDFlag != "" {
 		paste, err := getPaste(*getUUIDFlag)
 		failOnError(err, "failed to retrieve paste")
-		fmt.Printf("%s\n", paste.Content)
+
+		content := paste.Content
+		if *decryptKeyFlag != "" {
+			o := openssl.New()
+
+			decrypted, err := o.DecryptString(*decryptKeyFlag, content)
+			failOnError(err, "failed to encrypt text")
+
+			content = string(decrypted)
+		}
+		fmt.Printf("%s\n", content)
 
 		os.Exit(0)
 	}
@@ -96,10 +107,6 @@ func main() {
 		o := openssl.New()
 
 		encrypted, err := o.EncryptString(key, dataStr)
-		if err != nil {
-			fmt.Printf("An error occurred: %s\n", err)
-		}
-
 		failOnError(err, "failed to encrypt text")
 
 		dataStr = string(encrypted)
