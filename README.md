@@ -23,7 +23,7 @@ https://p.lee.io/f51eeb24-d54a-46b4-85ab-eecef159e91b
 [root@lee ~]# "lolololol" | gopaste -encrypt
 https://p.lee.io/3ee20782-e75e-47c5-97fc-ed2fe50a846a#encryptionKey=kJGDMAYagndatCQ4Fi0UgFHa
 
-[root@lee ~]# gopaste -get 3ee20782-e75e-47c5-97fc-ed2fe50a846a -decryptionkey kJGDMAYagndatCQ4Fi0UgFHa
+[root@lee ~]# gopaste -get 3ee20782-e75e-47c5-97fc-ed2fe50a846a -decrypt kJGDMAYagndatCQ4Fi0UgFHa
 lolololol
 ```
 
@@ -37,10 +37,10 @@ lololol
 ```
 gopaste --help
 Usage of /usr/bin/local/gopaste:
-  -decryptionkey string
-        (Optional) Decryption key for retrieving encrypted pastes (client-side)
+  -decrypt string
+        Decryption key for retrieving encrypted pastes (client-side)
   -encrypt
-        Encrypts paste
+        Encrypts paste (client-side)
   -expires string
         (Optional) Expire type to use for paste
   -file string

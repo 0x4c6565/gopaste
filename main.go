@@ -48,7 +48,7 @@ func main() {
 	var expiresFlag = flag.String("expires", "", "(Optional) Expire type to use for paste")
 	var fileFlag = flag.String("file", "", "(Optional) File to read from. Stdin is used if not provided")
 	var encryptFlag = flag.Bool("encrypt", false, "Encrypts paste (client-side)")
-	var decryptKeyFlag = flag.String("decryptionkey", "", "Decryption key for retrieving encrypted pastes (client-side)")
+	var decryptFlag = flag.String("decrypt", "", "Decryption key for retrieving encrypted pastes (client-side)")
 	var getUUIDFlag = flag.String("get", "", "UUID of paste to retrieve")
 	var getSyntaxFlag = flag.Bool("getsyntax", false, "Retrieve supported syntax")
 	var getExpiresFlag = flag.Bool("getexpires", false, "Retrieve supported expire types")
@@ -62,10 +62,10 @@ func main() {
 		failOnError(err, "failed to retrieve paste")
 
 		content := paste.Content
-		if *decryptKeyFlag != "" {
+		if *decryptFlag != "" {
 			o := openssl.New()
 
-			decrypted, err := o.DecryptString(*decryptKeyFlag, content)
+			decrypted, err := o.DecryptString(*decryptFlag, content)
 			failOnError(err, "failed to encrypt text")
 
 			content = string(decrypted)
