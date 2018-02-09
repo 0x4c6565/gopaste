@@ -66,7 +66,7 @@ func main() {
 			o := openssl.New()
 
 			decrypted, err := o.DecryptString(*decryptFlag, content)
-			failOnError(err, "failed to encrypt text")
+			failOnError(err, "failed to decrypt text")
 
 			content = string(decrypted)
 		}
