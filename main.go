@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	openssl "github.com/Luzifer/go-openssl"
+	openssl "gopkg.in/Luzifer/go-openssl.v2"
 )
 
 var url = "https://p.lee.io"
@@ -47,7 +47,6 @@ func main() {
 	var syntaxFlag = flag.String("syntax", "", "(Optional) Syntax to use for paste")
 	var expiresFlag = flag.String("expires", "", "(Optional) Expire type to use for paste")
 	var fileFlag = flag.String("file", "", "(Optional) File to read from. Stdin is used if not provided")
-	var encryptFlag = flag.Bool("encrypt", false, "Encrypts paste (client-side)")
 	var decryptFlag = flag.String("decrypt", "", "Decryption key for retrieving encrypted pastes (client-side)")
 	var getUUIDFlag = flag.String("get", "", "UUID of paste to retrieve")
 	var getSyntaxFlag = flag.Bool("getsyntax", false, "Retrieve supported syntax")
@@ -102,24 +101,18 @@ func main() {
 
 	dataStr := string(data)
 	key := ""
-	if *encryptFlag {
-		key = generatePassword()
-		o := openssl.New()
+	key = generatePassword()
+	o := openssl.New()
 
-		encrypted, err := o.EncryptString(key, dataStr)
-		failOnError(err, "failed to encrypt text")
+	encrypted, err := o.EncryptString(key, dataStr)
+	failOnError(err, "failed to encrypt text")
 
-		dataStr = string(encrypted)
-	}
+	dataStr = string(encrypted)
 
 	uuid, err := addPaste(dataStr, *syntaxFlag, *expiresFlag)
 	failOnError(err, "failed to add paste")
 
-	if *encryptFlag {
-		uuid = fmt.Sprintf("%s#encryptionKey=%s", uuid, key)
-	}
-
-	fmt.Printf("%s/%s\n", url, uuid)
+	fmt.Printf("%s/%s#encryptionKey=%s\n", url, uuid, key)
 }
 
 func failOnError(err error, message string) {
