@@ -32,7 +32,7 @@ https://p.lee.io/f51eeb24-d54a-46b4-85ab-eecef159e91b#encryptionKey=ddGtwmBD40k2
 gopaste --help
 Usage of /usr/bin/local/gopaste:
   -decrypt string
-        Decryption key for retrieving pastes
+        Decryption key for retrieving encrypted pastes (client-side)
   -expires string
         (Optional) Expire type to use for paste
   -file string
