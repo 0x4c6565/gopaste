@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	openssl "gopkg.in/Luzifer/go-openssl.v2"
+	openssl "gopkg.in/Luzifer/go-openssl.v1"
 )
 
 var url = "https://p.lee.io"
