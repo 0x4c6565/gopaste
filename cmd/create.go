@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/0x4c6565/gopaste/internal/pkg/util"
@@ -19,7 +20,7 @@ func createPasteCommand() *cobra.Command {
 	}
 
 	createCmd.Flags().StringP("content", "c", "", "Content for the paste")
-	createCmd.Flags().StringP("file", "f", "", "File to read content from")
+	createCmd.Flags().StringP("file", "f", "", "File to read content from. Use '-' for stdin")
 	createCmd.Flags().StringP("syntax", "s", "text/plain", "Syntax highlighting for the paste")
 	createCmd.Flags().Int64P("expires", "e", 604800, "When the paste expires (see list-expires for options)")
 
@@ -52,11 +53,19 @@ func createPaste(cmd *cobra.Command, args []string) error {
 	}
 
 	if file != "" {
-		data, err := os.ReadFile(file)
-		if err != nil {
-			return fmt.Errorf("error reading file: %s", err)
+		if file == "-" {
+			data, err := io.ReadAll(os.Stdin)
+			if err != nil {
+				return fmt.Errorf("error reading content from stdin: %s", err)
+			}
+			content = string(data)
+		} else {
+			data, err := os.ReadFile(file)
+			if err != nil {
+				return fmt.Errorf("error reading file: %s", err)
+			}
+			content = string(data)
 		}
-		content = string(data)
 	}
 
 	syntax, err := cmd.Flags().GetString("syntax")
