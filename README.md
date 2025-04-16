@@ -1,6 +1,6 @@
 # gopaste
 
-A client for pasting text to p.lee.io from stdin/files. Utilising client-side encryption/decryption
+A client for pasting text to p.lee.io from stdin/files. Utilises client-side encryption/decryption
 
 ## Examples
 
